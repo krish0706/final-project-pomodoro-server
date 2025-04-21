@@ -1,6 +1,6 @@
 <!doctype html>
 <title>{% block title %}{% endblock %} - Pomodoro Timer</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 <nav>
   <h1>Pomodoro Timer</h1>
   <ul>
@@ -9,5 +9,9 @@
   </ul>
 </nav>
 <section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  
   {% block content %}{% endblock %}
 </section>
