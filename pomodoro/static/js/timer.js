@@ -2,7 +2,6 @@ let timer;
 const timer_interval = 1000;
 
 function init_timer() {
-    // TODO: find a way to load default values from server rather than adding information inside html page
     timer_interval_callback();
     timer = setInterval(timer_interval_callback, timer_interval);
 }
@@ -37,4 +36,6 @@ function reset_timer() {
     fetch('/reset', {method:'POST'});
 }
 
-init_timer();
+document.addEventListener("DOMContentLoaded", function() {
+    init_timer();
+});
