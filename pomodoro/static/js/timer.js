@@ -1,5 +1,9 @@
 let timer;
 const timer_interval = 1000;
+const focus_bg_color = "#FC94A1";
+const break_bg_color = "#78C1A3";
+const focus_mode = "focus";
+const body = document.body;
 
 function init_timer() {
     timer_interval_callback();
@@ -8,7 +12,6 @@ function init_timer() {
 
 function timer_interval_callback() {
     const timer_element = document.getElementById('timer');
-    const state_element = document.getElementById('state');
     const mode_element = document.getElementById('mode');
 
     fetch('/state')
@@ -18,8 +21,8 @@ function timer_interval_callback() {
         let mins = Math.floor(seconds_remaining / 60);
         let secs = Math.floor(seconds_remaining % 60);
         timer_element.textContent = mins.toString().padStart(2, '0') + ":" + secs.toString().padStart(2, '0');
-        state_element.textContent = data.state;
         mode_element.textContent = data.mode;
+        body.style.backgroundColor = (data.mode == focus_mode) ? focus_bg_color : break_bg_color;
     });
 
 }

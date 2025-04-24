@@ -7,11 +7,13 @@
 {% endblock %}
 
 {% block content %}
-<h1>Hello from home!</h1>
-<h2 id="state">paused</h2>
-<h2 id="mode"></h2>
-<h2 id="timer"></h2>
-<button name="play-button" onclick="play_timer()">Play</button>
-<button name="pause-button" onclick="pause_timer()">Pause</button>
-<button name="reset-button" onclick="reset_timer()">Reset</button>
+<div class="container">
+    <div id="mode"></div>
+    <div id="timer"></div>
+    <div class="controls">
+        <button name="play-button" onclick="play_timer()">Play</button>
+        <button name="pause-button" onclick="pause_timer()">Pause</button>
+        <button name="reset-button" onclick="reset_timer()">Reset</button>
+    </div>
+</div>
 {% endblock %}

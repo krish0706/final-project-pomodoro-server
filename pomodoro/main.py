@@ -9,8 +9,6 @@ timer = PomodoroTimer()
 @bp.route("/")
 @bp.route("/home")
 def home():
-    global timer
-    timer = PomodoroTimer()
     return render_template("home.html")
 
 
@@ -33,6 +31,8 @@ def pause_timer():
 
 @bp.route("/reset", methods=["POST"])
 def reset_timer():
+    global timer
+    timer = PomodoroTimer()
     timer.handle_event("reset")
     return jsonify({"message": "timer reset"})
 
