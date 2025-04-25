@@ -2,12 +2,20 @@ import RPi.GPIO as GPIO
 import time
 
 class Buzzer:
-    def __init__(self, pin=4, frequency=1000):
-        self.pin = pin
-        self.frequency = frequency
+    BUZZER_PIN = 4
+
+    def __init__(self):
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.pin, GPIO.OUT)
-        self.pwm = GPIO.PWM(self.pin, self.frequency)
+        GPIO.setup(self.BUZZER_PIN, GPIO.OUT)
+        self.pwm = None
+
+    def _start_pwm(self, freq):
+        if self.pwm is None:
+            self.pwm = GPIO.PWM(self.BUZZER_PIN, freq)
+            self.pwm.start(50)
+        else:
+            self.pwm.ChangeFrequency(freq)
+            self.pwm.start(50)
 
     def play_tone(self, freq, duration):
         self.pwm.ChangeFrequency(freq)

@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, jsonify
 from .pomodoro_timer import PomodoroTimer
 from .buzzer import Buzzer
 
-
 bp = Blueprint("main", __name__, url_prefix="/")
 timer = PomodoroTimer()
 buzzer = Buzzer()

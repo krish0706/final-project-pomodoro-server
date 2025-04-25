@@ -1,5 +1,6 @@
 import time
-from .buzzer import Buzzer
+from buzzer import Buzzer
+
 
 buzzer = Buzzer()
 
