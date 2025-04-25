@@ -1,0 +1,26 @@
+[project]
+name = "pomodoro"
+version = "1.0.0"
+description = "Pomodoro timer server running on Rasberry Pi"
+dependencies = [
+    "flask",
+]
+authors = [
+  { name="Krish Shah", email="krish.shah-1@colorado.edu" },
+  { name="Bhakti Ramani", email="bhra1256@colorado.edu" },
+]
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+pomodoro = ["templates/*.html", "static/css/*.css", "static/images/*.png", "static/js/*.js"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

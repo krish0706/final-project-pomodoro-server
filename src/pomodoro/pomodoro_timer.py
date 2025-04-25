@@ -2,7 +2,7 @@ import time
 
 
 class PomodoroTimer:
-    FOCUS_DURATION = 1 * 60
+    FOCUS_DURATION = 5 * 60
     BREAK_DURATION = 1 * 60
 
     def __init__(self):
