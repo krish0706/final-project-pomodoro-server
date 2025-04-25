@@ -1,4 +1,7 @@
 import time
+from .buzzer import Buzzer
+
+buzzer = Buzzer()
 
 
 class PomodoroTimer:
@@ -64,9 +67,11 @@ class PomodoroTimer:
             if self.focus_break_toggle:
                 self.duration = self.BREAK_DURATION
                 self.mode = "break"
+                buzzer.pomodaro_end()
             else:
                 self.duration = self.FOCUS_DURATION
                 self.mode = "focus"
+                buzzer.pomodaro_start()
             self.start_time = int(time.monotonic())
             self.focus_break_toggle = not self.focus_break_toggle
 

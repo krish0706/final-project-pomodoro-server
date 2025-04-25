@@ -1,14 +1,17 @@
 from flask import Blueprint, render_template, jsonify
 from .pomodoro_timer import PomodoroTimer
+from .buzzer import Buzzer
 
 
 bp = Blueprint("main", __name__, url_prefix="/")
 timer = PomodoroTimer()
+buzzer = Buzzer()
 
 
 @bp.route("/")
 @bp.route("/home")
 def home():
+    buzzer.system_start()
     return render_template("home.html")
 
 
@@ -19,6 +22,7 @@ def about():
 
 @bp.route("/start", methods=["POST"])
 def start_timer():
+    buzzer.pomodaro_start()
     timer.handle_event("start")
     return jsonify({"message": "timer started"})
 
