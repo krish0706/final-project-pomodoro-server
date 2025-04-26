@@ -71,6 +71,7 @@ class Display:
         time.sleep(0.002)
 
     def clear(self):
+        self._init_lcd()
         self._command(LCD_CLEARDISPLAY)
         time.sleep(0.002)
 
@@ -107,6 +108,7 @@ if __name__ == "__main__":
     lcd.show_message("HEEYYYY ", 1)
     lcd.show_message("How you  doin ", 2)
     lcd.show_message("Hello    there ", 0)
+    lcd.clear()
 
     while(True):
         pass

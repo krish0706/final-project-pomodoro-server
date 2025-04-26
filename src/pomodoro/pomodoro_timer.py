@@ -7,8 +7,8 @@ lcd = Display()
 
 
 class PomodoroTimer:
-    FOCUS_DURATION = 1 * 5  # 20 seconds for testing
-    BREAK_DURATION = 1 * 5
+    FOCUS_DURATION = 1 * 2 # 20 seconds for testing
+    BREAK_DURATION = 1 * 2
 
     def __init__(self):
         self.events = None
@@ -36,7 +36,7 @@ class PomodoroTimer:
         self.focus_break_toggle = True
         self.mode = "focus"
         self.duration = self.FOCUS_DURATION
-        #lcd.clear()
+        lcd.clear()
         lcd.show_message(f"Mode: {self.mode}", 1, 3)
 
     def _paused(self, event):
