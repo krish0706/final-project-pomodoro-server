@@ -13,7 +13,6 @@ class Buzzer:
     def _start_pwm(self, freq):
         self.pwm = GPIO.PWM(self.BUZZER_PIN, freq)
         self.pwm.start(50)
-     
 
     def play_tone(self, freq, duration):
         if self.pwm is None:  
@@ -45,12 +44,17 @@ class Buzzer:
         self._play_sequence(notes, duration)
     
 
-    def pomodaro_ambient(self):
-        notes = [98.00, 123.47, 146.83, 130.81]
-        duration = [0.7, 0.7, 0.8, 1.0]
-        for note, dur in zip(notes, duration):
-            self.play_tone(note, dur)
-            time.sleep(0.3)
+    def play_reset(self):
+    # Reset tune - "Starting over" feeling (distinctive pattern)
+        notes = [392.00, 349.23, 329.63, 349.23, 392.00, 523.25]  # G4, F4, E4, F4, G4, C5
+        duration = [0.15, 0.15, 0.15, 0.15, 0.15, 0.3]
+        self._play_sequence(notes, duration)
+
+    def play_pause(self):
+        # Pause tune - "On hold" feeling (gentle alternating pattern)
+        notes = [329.63, 392.00, 329.63, 392.00, 349.23, 329.63]  # E4, G4, E4, G4, F4, E4
+        duration = [0.2, 0.2, 0.2, 0.2, 0.2, 0.3]
+        self._play_sequence(notes, duration)
 
     def _play_sequence(self, notes, durations):
         for note, dur in zip(notes, durations):

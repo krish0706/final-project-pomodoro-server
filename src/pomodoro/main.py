@@ -28,6 +28,7 @@ def start_timer():
 
 @bp.route("/pause", methods=["POST"])
 def pause_timer():
+    buz.play_pause()
     timer.handle_event("pause")
     return jsonify({"message": "timer paused"})
 
@@ -35,6 +36,7 @@ def pause_timer():
 @bp.route("/reset", methods=["POST"])
 def reset_timer():
     global timer
+    buz.play_reset()
     timer = PomodoroTimer()
     timer.handle_event("reset")
     return jsonify({"message": "timer reset"})
