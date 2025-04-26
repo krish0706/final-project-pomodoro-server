@@ -1,16 +1,19 @@
 from flask import Blueprint, render_template, jsonify
 from .pomodoro_timer import PomodoroTimer
 from .buzzer_tunes import Buzzer
+from .lcd import Display
 
 bp = Blueprint("main", __name__, url_prefix="/")
 timer = PomodoroTimer()
 buz = Buzzer()
+lcd = Display()
 
 
 @bp.route("/")
 @bp.route("/home")
 def home():
     buz.system_start()
+    lcd.home()
     return render_template("home.html")
 
 
