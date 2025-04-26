@@ -1,146 +1,97 @@
-# #!/usr/bin/python3
-
-# from rpi_lcd import LCD
-# import time
-
-# class Display:
-#     def __init__(self):
-#         self.lcd = LCD()
-
-#     def home(self):
-#         self.lcd.clear()
-#         self.lcd.text("Pomodoro Timer", 1)
-
-#     def show_message(self, line1="", line2=""):
-#         self.lcd.clear()
-#         if line1:
-#             self.lcd.text(line1, 1)
-#         if line2:
-#             self.lcd.text(line2, 2)
-
-#     def clear(self):
-#         self.lcd.clear()
-
-#     def cleanup(self):
-#         self.lcd.clear()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import os
 import fcntl
 import time
-import os
-
 
 I2C_SLAVE = 0x0703
+LCD_I2C_ADDR = 0x27  
 
-class I2CDevice:
-    def __init__(self, address, bus=1):
-        self.address = address
-        self.bus = bus
-        self.file = os.open(f"/dev/i2c-{bus}", os.O_RDWR)
-        fcntl.ioctl(self.file, I2C_SLAVE, address)
+# Commands
+LCD_CLEARDISPLAY = 0x01
+LCD_RETURNHOME = 0x02
+LCD_ENTRYMODESET = 0x04
+LCD_DISPLAYCONTROL = 0x08
+LCD_FUNCTIONSET = 0x20
+LCD_SETDDRAMADDR = 0x80
 
-    def write_byte(self, byte):
-        os.write(self.file, bytes([byte]))
+# Flags
+LCD_ENTRYLEFT = 0x02
+LCD_DISPLAYON = 0x04
+LCD_2LINE = 0x08
+LCD_5x8DOTS = 0x00
+LCD_4BITMODE = 0x00
 
-    def close(self):
-        os.close(self.file)
-        
-        
-class LCD:
-    # Commands
-    LCD_CLEAR = 0x01
-    LCD_RETURN_HOME = 0x02
-    LCD_ENTRY_MODE = 0x06
-    LCD_DISPLAY_ON = 0x0C
-    LCD_FUNCTION_SET = 0x28  # 4-bit, 2-line, 5x8 font
-
-    # Control bits
-    ENABLE = 0b00000100
-    RW = 0b00000010
-    RS = 0b00000001
-
-    def __init__(self, address=0x27, bus=1):
-        self.device = I2CDevice(address, bus)
-        self.backlight = 0x08  # Assume backlight on
+class Display:
+    def __init__(self):
+        self.file = os.open("/dev/i2c-1", os.O_RDWR)
+        fcntl.ioctl(self.file, I2C_SLAVE, LCD_I2C_ADDR)
+        self.backlight = 0x08  # backlight ON
         self._init_lcd()
 
+    def _write_byte(self, data):
+        os.write(self.file, bytes([data | self.backlight]))
+
     def _pulse_enable(self, data):
-        self.device.write_byte(data | self.ENABLE | self.backlight)
+        self._write_byte(data | 0x04)  # Enable high
         time.sleep(0.0005)
-        self.device.write_byte((data & ~self.ENABLE) | self.backlight)
+        self._write_byte(data & ~0x04)  # Enable low
         time.sleep(0.0001)
 
-    def _send_nibble(self, nibble, mode=0):
-        data = (nibble & 0xF0) | mode
-        self.device.write_byte(data | self.backlight)
+    def _write4bits(self, data):
+        self._write_byte(data)
         self._pulse_enable(data)
 
-    def _send_byte(self, byte, mode=0):
-        self._send_nibble(byte & 0xF0, mode)
-        self._send_nibble((byte << 4) & 0xF0, mode)
+    def _send(self, data, mode=0):
+        high = data & 0xF0
+        low = (data << 4) & 0xF0
+        self._write4bits(high | mode)
+        self._write4bits(low | mode)
+
+    def _command(self, cmd):
+        self._send(cmd, mode=0x00)
+
+    def _write_char(self, char):
+        self._send(ord(char), mode=0x01)
 
     def _init_lcd(self):
-        time.sleep(0.02)  # Wait for LCD to power up
-        self._send_nibble(0x30)
+        time.sleep(0.05)  # wait for LCD to power up
+        self._write4bits(0x30)
         time.sleep(0.005)
-        self._send_nibble(0x30)
-        time.sleep(0.001)
-        self._send_nibble(0x30)
-        time.sleep(0.001)
-        self._send_nibble(0x20)  # 4-bit mode
-        time.sleep(0.001)
+        self._write4bits(0x30)
+        time.sleep(0.005)
+        self._write4bits(0x30)
+        time.sleep(0.005)
+        self._write4bits(0x20)  # set to 4-bit mode
+        time.sleep(0.005)
 
-        self._send_byte(self.LCD_FUNCTION_SET)
-        self._send_byte(self.LCD_DISPLAY_ON)
-        self._send_byte(self.LCD_CLEAR)
-        self._send_byte(self.LCD_ENTRY_MODE)
+        self._command(LCD_FUNCTIONSET | LCD_2LINE | LCD_5x8DOTS | LCD_4BITMODE)
+        self._command(LCD_DISPLAYCONTROL | LCD_DISPLAYON)
+        self._command(LCD_CLEARDISPLAY)
+        self._command(LCD_ENTRYMODESET | LCD_ENTRYLEFT)
         time.sleep(0.002)
 
     def clear(self):
-        self._send_byte(self.LCD_CLEAR)
+        self._command(LCD_CLEARDISPLAY)
         time.sleep(0.002)
+
+    def home(self):
+        self._command(LCD_RETURNHOME)
+        time.sleep(0.002)
+
+    def set_cursor(self, col, row):
+        row_offsets = [0x00, 0x40, 0x10, 0x50]  # Very important for 16x4!
+        if row > 3:
+            row = 3
+        addr = col + row_offsets[row]
+        self._command(LCD_SETDDRAMADDR | addr)
 
     def write(self, text):
         for char in text:
-            self._send_byte(ord(char), self.RS)
+            self._write_char(char)
 
-    def set_cursor(self, row, col):
-        row_offsets = [0x00, 0x40, 0x14, 0x54]
-        addr = 0x80 | (col + row_offsets[row])
-        self._send_byte(addr)
+    def show_message(self, text, line=0):
+        self.set_cursor(0, line)
+        self.write(text.ljust(16))  # pad to clear line fully
 
     def close(self):
-        self.device.close()
-
-lcd = LCD()
-
-lcd.clear()
-lcd.set_cursor(0, 0)
-lcd.write("Hello, World!")
-
-lcd.set_cursor(1, 0)
-lcd.write("Bhakti Ramani!")
-
-# When done
-lcd.close()
-
-
-
-
+        os.close(self.file)
 
