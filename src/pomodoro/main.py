@@ -13,18 +13,20 @@ lcd = Display()
 @bp.route("/home")
 def home():
     buz.system_start()
-    lcd.home()
+    lcd.title()
     return render_template("home.html")
 
 
 @bp.route("/about")
 def about():
+    lcd.title()
     return render_template("about.html")
 
 
 @bp.route("/start", methods=["POST"])
 def start_timer():
     buz.pomodaro_start()
+    lcd.title()
     timer.handle_event("start")
     return jsonify({"message": "timer started"})
 
@@ -32,6 +34,7 @@ def start_timer():
 @bp.route("/pause", methods=["POST"])
 def pause_timer():
     buz.play_pause()
+    lcd.title()
     timer.handle_event("pause")
     return jsonify({"message": "timer paused"})
 
@@ -40,6 +43,7 @@ def pause_timer():
 def reset_timer():
     global timer
     buz.play_reset()
+    lcd.title()
     timer = PomodoroTimer()
     timer.handle_event("reset")
     return jsonify({"message": "timer reset"})

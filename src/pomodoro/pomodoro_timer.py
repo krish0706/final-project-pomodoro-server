@@ -7,8 +7,8 @@ lcd = Display()
 
 
 class PomodoroTimer:
-    FOCUS_DURATION = 1 * 20  # 20 seconds for testing
-    BREAK_DURATION = 1 * 20
+    FOCUS_DURATION = 1 * 5  # 20 seconds for testing
+    BREAK_DURATION = 1 * 5
 
     def __init__(self):
         self.events = None
@@ -21,6 +21,7 @@ class PomodoroTimer:
         self.duration = None
         self.current_state = None
         self._reset()
+        
 
     def _reset(self):
         self.events = {"start", "pause", "reset"}
@@ -35,7 +36,8 @@ class PomodoroTimer:
         self.focus_break_toggle = True
         self.mode = "focus"
         self.duration = self.FOCUS_DURATION
-        lcd.show_message("Mode: Focus", "Press Start")
+        #lcd.clear()
+        lcd.show_message(f"Mode: {self.mode}", 1, 3)
 
     def _paused(self, event):
         if event == "start":
@@ -45,7 +47,8 @@ class PomodoroTimer:
             else:
                 duration_paused = int(time.monotonic()) - self.pause_time
                 self.start_time += duration_paused
-            lcd.show_message(f"Mode: {self.mode}", "Running...")  # LCD shows running
+            #lcd.clear()
+            lcd.show_message(f"Mode: {self.mode}", 1, 3)  # LCD shows running
         elif event == "reset":
             self._reset()
 
@@ -54,7 +57,8 @@ class PomodoroTimer:
             self.pause_time = int(time.monotonic())
             self.current_state = "paused"
             self.was_paused = True
-            lcd.show_message(f"Mode: {self.mode}", "Paused")  # LCD shows paused
+            #lcd.clear()
+            lcd.show_message(f"Mode: {self.mode}", 1, 3)  # LCD shows paused
         elif event == "reset":
             self._reset()
 
@@ -71,7 +75,9 @@ class PomodoroTimer:
         # remaining time on LCD
         minutes = remaining // 60
         seconds = remaining % 60
-        lcd.show_message(f"Mode: {self.mode}", f"{minutes:02}:{seconds:02} Left")
+        #lcd.clear()
+        lcd.show_message(f"Mode: {self.mode}", 1, 3)
+        lcd.show_message(f"{minutes:02}:{seconds:02} Left",2, 3)
 
         return remaining
 
@@ -81,12 +87,12 @@ class PomodoroTimer:
                 self.duration = self.BREAK_DURATION
                 self.mode = "break"
                 buz.pomodaro_end()
-                lcd.show_message("Break Time!", "")
+                lcd.show_message("Break Time!", 3, 3)
             else:
                 self.duration = self.FOCUS_DURATION
                 self.mode = "focus"
                 buz.pomodaro_start()
-                lcd.show_message("Focus Time!", "")
+                lcd.show_message("Focus Time!", 3, 3)
             self.start_time = int(time.monotonic())
             self.focus_break_toggle = not self.focus_break_toggle
 

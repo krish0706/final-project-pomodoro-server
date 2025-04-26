@@ -90,21 +90,25 @@ class Display:
             self._write_char(char)
             
 
-    def show_message(self, text, line=0):
-        self.set_cursor(0, line)
+    def show_message(self, text, line=0, col=0):
+        self.set_cursor(col, line)
         self.write(text.ljust(16))  # pad to clear line fully]
         
+    def title(self):
+        self.show_message("Pomodoro Timer", 0)
 
     def close(self):
         os.close(self.file)
 
-lcd = Display()
 
-lcd.show_message("HEEYYYY ", 1)
-lcd.show_message("How you  doin ", 2)
-lcd.show_message("Hello    there ", 0)
+if __name__ == "__main__":
+    lcd = Display()
 
-while(True):
-    pass
+    lcd.show_message("HEEYYYY ", 1)
+    lcd.show_message("How you  doin ", 2)
+    lcd.show_message("Hello    there ", 0)
+
+    while(True):
+        pass
 
 
