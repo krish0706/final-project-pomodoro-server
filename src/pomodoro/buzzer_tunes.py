@@ -5,19 +5,19 @@ class Buzzer:
     BUZZER_PIN = 4
 
     def __init__(self):
+        GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.BUZZER_PIN, GPIO.OUT)
         self.pwm = None
-
+        
     def _start_pwm(self, freq):
-        if self.pwm is None:
-            self.pwm = GPIO.PWM(self.BUZZER_PIN, freq)
-            self.pwm.start(50)
-        else:
-            self.pwm.ChangeFrequency(freq)
-            self.pwm.start(50)
+        self.pwm = GPIO.PWM(self.BUZZER_PIN, freq)
+        self.pwm.start(50)
+     
 
     def play_tone(self, freq, duration):
+        if self.pwm is None:  
+            self._start_pwm(freq)
         self.pwm.ChangeFrequency(freq)
         self.pwm.start(50)
         time.sleep(duration)
@@ -43,6 +43,7 @@ class Buzzer:
         notes = [880.00, 783.99, 659.25, 587.33, 659.25, 523.25]
         duration = [0.1, 0.1, 0.1, 0.1, 0.15, 0.2]
         self._play_sequence(notes, duration)
+    
 
     def pomodaro_ambient(self):
         notes = [98.00, 123.47, 146.83, 130.81]
