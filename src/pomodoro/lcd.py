@@ -48,6 +48,7 @@ class Display:
 
     def _command(self, cmd):
         self._send(cmd, mode=0x00)
+        time.sleep(0.001)
 
     def _write_char(self, char):
         self._send(ord(char), mode=0x01)
@@ -87,11 +88,23 @@ class Display:
     def write(self, text):
         for char in text:
             self._write_char(char)
+            
 
     def show_message(self, text, line=0):
         self.set_cursor(0, line)
-        self.write(text.ljust(16))  # pad to clear line fully
+        self.write(text.ljust(16))  # pad to clear line fully]
+        
 
     def close(self):
         os.close(self.file)
+
+lcd = Display()
+
+lcd.show_message("HEEYYYY ", 1)
+lcd.show_message("How you  doin ", 2)
+lcd.show_message("Hello    there ", 0)
+
+while(True):
+    pass
+
 
