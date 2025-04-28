@@ -14,10 +14,6 @@ ip = IPAddressFetcher()
 @bp.route("/")
 @bp.route("/home")
 def home():
-    buz.system_start()
-    ip_address = ip.fetch_ip()
-    if ip.is_connected():
-        lcd.show_message(ip_address, 0,3)
     return render_template("home.html")
 
 
@@ -80,3 +76,8 @@ def get_timer_state():
             "mode": mode,
         }
     )
+
+buz.system_start()
+ip_address = ip.fetch_ip()
+if ip.is_connected():
+    lcd.show_message(ip_address, 0,3)
