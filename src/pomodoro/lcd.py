@@ -1,3 +1,7 @@
+
+
+
+
 import os
 import fcntl
 import time
@@ -20,6 +24,7 @@ LCD_2LINE = 0x08
 LCD_5x8DOTS = 0x00
 LCD_4BITMODE = 0x00
 
+ 
 class Display:
     def __init__(self):
         self.file = os.open("/dev/i2c-1", os.O_RDWR)
@@ -96,7 +101,7 @@ class Display:
         self.write(text.ljust(16))  # pad to clear line fully]
         
     def title(self):
-        self.show_message("Pomodoro Timer", 0)
+        self.show_message("Pomodoro Timer", 0,3)
 
     def close(self):
         os.close(self.file)
