@@ -1,3 +1,28 @@
+/******************************************************************************
+ * Name        : Bhakti Ramani
+ * Subject     : ECEN 5713 - Advanced Embedded Systems Development (AESD)
+ * Institution : University of Colorado Boulder
+ * File        : lcd_basic.py
+ * Description : 
+ *   This file contains updated drivers and integration for the Pomodoro 
+ *   hardware project:
+ *     - New LCD driver using fcntl library (replacing rpi.lcd for Buildroot compatibility)
+ *     - Updated buzzer driver with tunes for different system states
+ *     - Integration of LCD and Buzzer drivers into Buildroot and server logic
+ *
+ * Steps :
+ *	This code uses 16x4 LCD with i2c driver module. Simply connect i2c pins to Rpi
+ * 	and run this code with Display class
+ * 	If this code doesn't work, try checking lcd display address and change LCD_I2C_ADDR
+ *	using i2cdetect -y
+ *
+ * Notes : This code was written for working on Buildroot and Raspberry Pi 4B
+ * 	   
+ *
+ *****************************************************************************/
+
+
+
 import os
 import fcntl
 import time
@@ -20,6 +45,11 @@ LCD_2LINE = 0x08
 LCD_5x8DOTS = 0x00
 LCD_4BITMODE = 0x00
 
+
+/***********************************************************
+ * Function Name : lcd_init
+ * Description   : Initializes the LCD display using fcntl IOCTL calls.
+ ***********************************************************/
 class Display:
     def __init__(self):
         self.file = os.open("/dev/i2c-1", os.O_RDWR)
