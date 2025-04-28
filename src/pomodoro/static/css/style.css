@@ -21,6 +21,21 @@ body {
   margin: 1rem;
 }
 
+.input-forms {
+  text-align: left;
+  font-weight: bolder;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+#focus-input {
+  width: 50px;
+}
+
+#break-input {
+  width: 50px;
+}
+
 #mode {
   font-size: 1.5rem;
 }
