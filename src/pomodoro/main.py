@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, render_template, jsonify, request, url_for, redirect
 from .pomodoro_timer import PomodoroTimer
 
 
@@ -48,3 +48,19 @@ def get_timer_state():
             "mode": mode,
         }
     )
+
+@bp.route("/submit", methods=["POST"])
+def submit_break():
+    try:
+        break_duration = int(request.form['break-input']) * 60
+    except ValueError:
+        return "Please enter a valid integer for break duration.", 400
+
+    try:
+        focus_duration = int(request.form['focus-input']) * 60 
+    except ValueError:
+        return "Please enter a valid integer for focus duration.", 400
+
+    timer.set_focus_and_break(focus_duration, break_duration)
+
+    return redirect(url_for("main.home"))

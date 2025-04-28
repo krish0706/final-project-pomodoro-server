@@ -2,6 +2,7 @@ import time
 
 
 class PomodoroTimer:
+
     FOCUS_DURATION = 5 * 60
     BREAK_DURATION = 1 * 60
 
@@ -77,3 +78,8 @@ class PomodoroTimer:
             self.state_table[self.current_state](event)
         else:
             print("Unknown event!")
+
+    def set_focus_and_break(self, focus_duration, break_duration):
+        self.FOCUS_DURATION = focus_duration
+        self.BREAK_DURATION = break_duration
+        self._reset()

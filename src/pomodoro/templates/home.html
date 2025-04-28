@@ -15,5 +15,14 @@
         <button name="pause-button" onclick="pause_timer()">Pause</button>
         <button name="reset-button" onclick="reset_timer()">Reset</button>
     </div>
+    <div class="input-forms">
+        <form action="/submit" method="POST">
+            <label >Focus duration</label>
+            <input type="number" id="focus-input" name="focus-input" step="1">
+            <label >Break duration</label>
+            <input type="number" id="break-input" name="break-input" step="1">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 </div>
 {% endblock %}
