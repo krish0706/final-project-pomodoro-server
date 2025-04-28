@@ -50,6 +50,7 @@ LCD_4BITMODE = 0x00
  * Function Name : lcd_init
  * Description   : Initializes the LCD display using fcntl IOCTL calls.
  ***********************************************************/
+ 
 class Display:
     def __init__(self):
         self.file = os.open("/dev/i2c-1", os.O_RDWR)
