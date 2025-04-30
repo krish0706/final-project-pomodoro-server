@@ -97,6 +97,6 @@ def submit_break():
 buz.system_start()
 ip_address = ip.fetch_ip()
 if ip.is_connected():
-    lcd.show_message(ip_address, 0,3)
+    lcd.show_message(ip_address, 0,0)
 
 
