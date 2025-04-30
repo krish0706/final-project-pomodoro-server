@@ -21,7 +21,7 @@ def home():
 def about():
     ip_address = ip.fetch_ip()
     if ip.is_connected():
-        lcd.show_message(ip_address, 0,3)
+        lcd.show_message(ip_address, 0,0)
     return render_template("about.html")
 
 
@@ -32,7 +32,7 @@ def start_timer():
     timer.handle_event("start")
     ip_address = ip.fetch_ip()
     if ip.is_connected():
-        lcd.show_message(ip_address, 0,3)
+        lcd.show_message(ip_address, 0,0)
     return jsonify({"message": "timer started"})
 
 
@@ -43,7 +43,7 @@ def pause_timer():
     timer.handle_event("pause")
     ip_address = ip.fetch_ip()
     if ip.is_connected():
-        lcd.show_message(ip_address, 0,3)
+        lcd.show_message(ip_address, 0,0)
     return jsonify({"message": "timer paused"})
 
 
@@ -56,7 +56,7 @@ def reset_timer():
     timer.handle_event("reset")
     ip_address = ip.fetch_ip()
     if ip.is_connected():
-        lcd.show_message(ip_address, 0,3)
+        lcd.show_message(ip_address, 0,0)
     return jsonify({"message": "timer reset"})
 
 
@@ -64,7 +64,7 @@ def reset_timer():
 def get_timer_state():
     ip_address = ip.fetch_ip()
     if ip.is_connected():
-        lcd.show_message(ip_address, 0,3)
+        lcd.show_message(ip_address, 0,0)
     else:
         lcd.title()    
     time_remaining = timer.get_remaining_time()
